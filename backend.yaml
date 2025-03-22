@@ -8,10 +8,13 @@
       ansible.builtin.command: dnf module disable nodejs -y
     - name: 02 - Enabling Nodejs version 20 Package
       ansible.builtin.command: dnf module enable nodejs:20 -y
-    - name: 03 - Installing Nodejs Package
+    - name: 03 - Installing Nodejs and Mysql Package
       ansible.builtin.package:
-        name: nodejs
+        name: "{{ item }}"
         state: present
+      loop:
+        - nodejs
+        - mysql
     - name: 04 - Creating an user
       ansible.builtin.user:
         name: expense
@@ -31,3 +34,15 @@
     - name: 08 - Installing the npm dependencies
       community.general.npm:
         path: /app
+    - name: 09 - Copying BackendService to service
+      ansible.builtin.copy:
+        src: backend.service
+        dest: /etc/systemd/system/BackendService.service
+    - name: 10 - copying the db script file to mysql
+      community.mysql.mysql_db:
+        state: import
+        name: all 
+        login_user: root
+        login_password: ExpenseApp@1
+        login_host: mysql.siliconapps.in
+        target: /app/schema/backend.sql
