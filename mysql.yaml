@@ -14,3 +14,14 @@
       name: mysqld
       state: started
       enabled: yes
+  
+  - name: 03 - connect to mysql-server
+    community.mysql.mysql_info:
+      login_user: root
+      login_password: ExpenseApp@1
+      login_host: mysql.siliconapps.in
+      register: {{mysql_info}}
+
+  - name: 04 - print the output
+    ansible.builtin.debug:
+      var: {{mysql_info}}
