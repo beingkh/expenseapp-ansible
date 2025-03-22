@@ -1,7 +1,7 @@
 ---
 
 - name: Backend Configuration
-  hosts: Backend
+  hosts: backend
   become: yes
   tasks:
     - name: 01 - Disabling Nodejs Package
