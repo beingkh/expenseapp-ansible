@@ -40,8 +40,11 @@
         dest: /etc/systemd/system/BackendService.service
     - name: 10 - install python libs
       ansible.builtin.pip:
-        name: PyMySQL
+        name: "{{ item }}"
         executable: pip3.9
+      loop:
+        - PyMySQL
+        - cryptography
     - name: 11 - copying the db script file to mysql
       community.mysql.mysql_db:
         state: import
