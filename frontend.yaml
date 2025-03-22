@@ -1,0 +1,16 @@
+---
+
+- name: configur frontend Server
+  hosts: frontend
+  become: yes
+  tasks:
+    - name: 01 -  install nginix
+      ansible.builtin.dnf:
+        name: nginx
+        state: installed
+
+    - name: 02 -  start nginix
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+        enabled: yes
