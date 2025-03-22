@@ -30,7 +30,7 @@
 
   - name: 04 - print the output
     ansible.builtin.debug:
-      var: "{{ mysql_info }}"
+      msg: "MYSQL info: {{ mysql_info }}"
   
   - name: 05 - Setup a root login_password
     ansible.builtin.command: " mysql_secure_installation --set-root-pass ExpenseApp@1 "
