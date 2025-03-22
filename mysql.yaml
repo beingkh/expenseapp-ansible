@@ -20,7 +20,7 @@
       login_user: root
       login_password: ExpenseApp@1
       login_host: mysql.siliconapps.in
-      register: {{ mysql_info }}
+      register: mysql_info
 
   - name: 04 - print the output
     ansible.builtin.debug:
