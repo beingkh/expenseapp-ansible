@@ -28,3 +28,6 @@
         src: /tmp/backend.zip
         dest: /app
         remote_src: yes
+    - name: 08 - Installing the npm dependencies
+      community.general.npm:
+        path: /app
