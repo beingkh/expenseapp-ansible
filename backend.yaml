@@ -6,8 +6,10 @@
   tasks:
     - name: 01 - Disabling Nodejs Package
       ansible.builtin.command: dnf module disable nodejs -y
+
     - name: 02 - Enabling Nodejs version 20 Package
       ansible.builtin.command: dnf module enable nodejs:20 -y
+
     - name: 03 - Installing Nodejs and Mysql Package
       ansible.builtin.package:
         name: "{{ item }}"
@@ -15,29 +17,36 @@
       loop:
         - nodejs
         - mysql
+
     - name: 04 - Creating an user
       ansible.builtin.user:
         name: expense
+
     - name: 05 - Creating a app directory
       ansible.builtin.file:
         path: /app
         state: directory
+
     - name: 06 - Downloading the backend code
       ansible.builtin.get_url:
         url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
         dest: /tmp/backend.zip
+
     - name: 07 - Unzipping the backend code
       ansible.builtin.unarchive:
         src: /tmp/backend.zip
         dest: /app
         remote_src: yes
+
     - name: 08 - Installing the npm dependencies
       community.general.npm:
         path: /app
+
     - name: 09 - Copying BackendService to service
       ansible.builtin.copy:
         src: backend.service
-        dest: /etc/systemd/system/BackendService.service
+        dest: /etc/systemd/system/backend.service
+
     - name: 10 - install python libs
       ansible.builtin.pip:
         name: "{{ item }}"
@@ -45,6 +54,7 @@
       loop:
         - PyMySQL
         - cryptography
+
     - name: 11 - copying the db script file to mysql
       community.mysql.mysql_db:
         state: import
@@ -53,9 +63,10 @@
         login_password: ExpenseApp@1
         login_host: mysql.siliconapps.in
         target: /app/schema/backend.sql
-    - name: 12 - Starting the BackendService
-      ansible.builtin.systemd_service:
-       enabled: true
-       state: restarted
-       daemon_reload: true
-       name: backend
+
+    - name: 12 - Start & Enable Backend Service
+      ansible.builtin.systemd:
+        name: backend
+        state: restarted
+        enabled: true
+        daemon_reload: true
