@@ -1,0 +1,15 @@
+---
+
+- name: Backend Configuration
+  hosts: Backend
+  become: yes
+  tasks:
+    - name: 01 - Disabling Nodejs Package
+      ansible.builtin.command: dnf module disable nodejs -y
+    - name: 02 - Enabling Nodejs version 20 Package
+      ansible.builtin.command: dnf module enable nodejs:20 -y
+    - name: 03 - Installing Nodejs Package
+      ansible.builtin.package:
+        name: nodejs
+        state: present
+
